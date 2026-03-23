@@ -16,6 +16,7 @@ void rate(FILE *arquivo){
         int burst;
         sscanf(linha, "%s %d %d", nome, &periodo, &burst);
         adicionar_processo(&head, nome, periodo, burst);
+        
     }
     fclose(arquivo);
 
