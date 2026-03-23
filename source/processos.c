@@ -7,8 +7,12 @@ void adicionar_processo(Processo **head, char *nome, int periodo, int burst){
     strcpy(novo->nome, nome);
     novo->periodo = periodo;
     novo->burst = burst;
-    novo->deadline = burst;
+    novo->deadline = periodo;
     novo->tempo_restante = burst;
+    novo->proxima_ativacao = periodo;
+    novo->LOST_DEADLINES = 0;
+    novo->status = 'R';
+    novo->unidades_segmento = 0;
     novo->next = NULL;
 
     if (novo != NULL){

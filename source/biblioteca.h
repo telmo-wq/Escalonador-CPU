@@ -11,6 +11,10 @@ typedef struct Processo {
     int burst;
     int tempo_restante;
     int deadline;
+    int proxima_ativacao;
+    int LOST_DEADLINES;
+    char status;
+    int unidades_segmento;
     struct Processo *next;
 } Processo;
 
