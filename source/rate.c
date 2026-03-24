@@ -35,32 +35,37 @@ void rate(FILE *arquivo){
         menor_periodo = 100000;
         processo_atual = NULL;
 
+
+        Processo *aux2 = head;    //checar deadlines vencidos
+        while(aux2 != NULL){
+            if (aux2->status != 'R'){
+                if(aux2->deadline == t && aux2->tempo_restante > 0){
+                    aux2->LOST_DEADLINES++;
+                    aux2->tempo_restante = 0;
+                    aux2->status = 'L';   
+                }
+            }
+            aux2 = aux2->next;
+        }
+
         Processo *aux = head;
         while(aux != NULL){                     //ativa próximas instâncias (checa qual será a próxima instância a ser executada)
             if (aux->proxima_ativacao == t){
                 aux->tempo_restante = aux->burst;
                 aux->deadline = t + aux->periodo;
                 aux->proxima_ativacao = t + aux->periodo;
+
+                printf("%s  %d  %d  %d\n", aux->nome, t, aux->deadline, aux->proxima_ativacao);
                 
             }
             aux = aux->next;   
         }
 
-        Processo *aux2 = head;    //checar deadlines vencidos
-        while(aux2 != NULL){
-            if(aux2->deadline == t && aux2->tempo_restante > 0){
-                aux2->LOST_DEADLINES++;
-                aux2->tempo_restante = 0;
-                aux2->status = 'L';   
-            }
-            aux2 = aux2->next;
-        }
 
         if(processo_anterior != NULL && processo_anterior->status == 'L'){
-            if (processo_anterior != NULL)
-                printf("%c\n", processo_anterior->status);
             fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
             processo_anterior->unidades_segmento = 0;
+            processo_anterior->status = 'R';
             processo_anterior = NULL;
         }
         
