@@ -11,6 +11,8 @@ void adicionar_processo(Processo **head, char *nome, int periodo, int burst){
     novo->tempo_restante = burst;
     novo->proxima_ativacao = periodo;
     novo->LOST_DEADLINES = 0;
+    novo->COMPLETE_EXECUTION = 0;
+    novo->KILLED = 0;
     novo->status = 'R';
     novo->unidades_segmento = 0;
     novo->next = NULL;

@@ -6,13 +6,15 @@
 
 
 typedef struct Processo {
-    char nome[32];
+    char *nome;
     int periodo;
     int burst;
     int tempo_restante;
     int deadline;
     int proxima_ativacao;
     int LOST_DEADLINES;
+    int COMPLETE_EXECUTION;
+    int KILLED;
     char status;
     int unidades_segmento;
     struct Processo *next;
