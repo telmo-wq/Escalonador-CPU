@@ -130,13 +130,24 @@ void rate(FILE *arquivo){
             processo_anterior = processo_atual;
         }
     }
-
     Processo *pointer = head;
+    while(pointer != NULL){
+        if (pointer->tempo_restante > 0){
+            pointer->status = 'K';
+            pointer->KILLED++;
+
+            fprintf(log, "%s for %d units - %c\n", pointer->nome, pointer->unidades_segmento, pointer->status);
+        }
+        pointer = pointer->next;
+    }
+
+
+    Processo *pointer2 = head;
 
     fprintf(log, "\nLOST DEADLINES\n");     //checa e exibe as lost_deadlines
-    while(pointer != NULL){
-        fprintf(log, "[%s] - %d\n", pointer->nome, pointer->LOST_DEADLINES);
-        pointer = pointer->next;
+    while(pointer2 != NULL){
+        fprintf(log, "[%s] - %d\n", pointer2->nome, pointer2->LOST_DEADLINES);
+        pointer2 = pointer2->next;
     }
 
     Processo *pointer3 = head;
@@ -147,17 +158,14 @@ void rate(FILE *arquivo){
         pointer3 = pointer3->next;
     }
 
-    Processo *pointer2 = head;
+    Processo *pointer4 = head;
     fprintf(log, "\nKILLED\n");
-    while(pointer2 != NULL){             //checa processos abortados depois que o loop acabou (killed)
-        if (pointer2->tempo_restante > 0){
-            pointer2->status = 'K';
-            pointer2->KILLED++;
-
-            fprintf(log, "[%s] - %d\n", pointer2->nome, pointer2->KILLED);
-            pointer2->unidades_segmento = 0;
+    while(pointer4 != NULL){             //checa processos abortados depois que o loop acabou (killed)
+        if (pointer4->tempo_restante > 0){
+            fprintf(log, "[%s] - %d\n", pointer4->nome, pointer4->KILLED);
+            pointer4->unidades_segmento = 0;
         }
-        pointer2 = pointer2->next;
+        pointer4 = pointer4->next;
     }
 
     fclose(log);
