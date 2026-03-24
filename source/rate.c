@@ -17,9 +17,6 @@ void rate(FILE *arquivo){
         sscanf(linha, "%s %d %d", nome, &periodo, &burst);
         adicionar_processo(&head, nome, periodo, burst);
     }
-    fclose(arquivo);
-
-    imprimir_processos(head);
 
     int menor_periodo;
 
@@ -42,7 +39,6 @@ void rate(FILE *arquivo){
                 aux->tempo_restante = aux->burst;
                 aux->deadline = t + aux->periodo;
                 aux->proxima_ativacao = t + aux->periodo;
-                processo_atual = aux;
                 
             }
             aux = aux->next;   
@@ -70,12 +66,26 @@ void rate(FILE *arquivo){
             aux3 = aux3->next;
         }
 
-        if (processo_atual == NULL){
+        if (processo_atual == NULL){      //caso o processo atual esteja em idle, ele checa se o processo anterior foi finalizado ou se foi preemptado e registra
             unidades_idle++;
-            fprintf(log,"idle for %d units\n", unidades_idle);
+            if (processo_anterior != NULL){
+                if (processo_anterior->tempo_restante > 0){
+                    processo_anterior->status = 'H';
+                    fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+                }else {
+                    processo_anterior->status = 'F';
+                    processo_anterior->COMPLETE_EXECUTION++;
+                    fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+                }
+                processo_anterior->unidades_segmento = 0;
+                processo_anterior = NULL;
+            }
+        } else if (processo_atual != NULL && unidades_idle > 0){
+            fprintf(log, "idle for %d units\n", unidades_idle);
+            unidades_idle = 0;
         }
 
-        if (processo_atual != processo_anterior){     //se o processo atual for diferente do anterior, então algo aconteceu com ele (preemptado, perdido ou finalizado)
+        if (processo_atual != processo_anterior && processo_anterior != NULL){     //se o processo atual for diferente do anterior, então algo aconteceu com ele (preemptado, perdido ou finalizado)
             if(processo_anterior->tempo_restante > 0){
                 processo_anterior->status = 'H';
 
@@ -89,8 +99,9 @@ void rate(FILE *arquivo){
                 processo_anterior->LOST_DEADLINES++;
 
             }
-
             fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+
+            processo_anterior->unidades_segmento = 0;
         }
 
         if (processo_atual != NULL){
@@ -99,7 +110,6 @@ void rate(FILE *arquivo){
 
             if(processo_atual->tempo_restante == 0){
                 processo_atual->status = 'F';
-                processo_anterior->COMPLETE_EXECUTION++;
             }
 
             processo_anterior = processo_atual;
@@ -112,7 +122,12 @@ void rate(FILE *arquivo){
         if (pointer->tempo_restante > 0){
             pointer->status = 'K';
             pointer->KILLED++;
+
+            fprintf(log, "%s for %d units - %c\n", pointer->nome, pointer->unidades_segmento, pointer->status);
+            pointer->unidades_segmento = 0;
         }
         pointer = pointer->next;
     }
+
+    fclose(log);
 }

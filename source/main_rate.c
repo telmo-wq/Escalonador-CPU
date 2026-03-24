@@ -7,4 +7,6 @@
 int main(int argc, char *argv[]){
     FILE *arquivo = fopen(argv[1], "r");
     rate(arquivo);
+
+    fclose(arquivo);
 }

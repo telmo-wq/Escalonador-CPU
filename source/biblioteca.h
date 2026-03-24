@@ -6,7 +6,7 @@
 
 
 typedef struct Processo {
-    char *nome;
+    char nome[32];
     int periodo;
     int burst;
     int tempo_restante;
