@@ -28,6 +28,8 @@ void rate(FILE *arquivo){
     int unidades_idle = 0;
 
     FILE *log = fopen("rate_tmfc.out", "w");
+    fprintf(log, "EXECUTION BY RATE\n");
+    fprintf(log, "\n");
 
     for (int t = 0; t < total_time; t++){   //loop principal
         menor_periodo = 100000;
@@ -48,12 +50,20 @@ void rate(FILE *arquivo){
         while(aux2 != NULL){
             if(aux2->deadline == t && aux2->tempo_restante > 0){
                 aux2->LOST_DEADLINES++;
-                aux2->unidades_segmento = 0;
                 aux2->tempo_restante = 0;
-                aux2->status = 'L';   //deveria ser strcpy? Provavelmente não!
+                aux2->status = 'L';   
             }
             aux2 = aux2->next;
         }
+
+        if(processo_anterior != NULL && processo_anterior->status == 'L'){
+            if (processo_anterior != NULL)
+                printf("%c\n", processo_anterior->status);
+            fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+            processo_anterior->unidades_segmento = 0;
+            processo_anterior = NULL;
+        }
+        
 
         Processo *aux3 = head;  
         while(aux3 != NULL){                //percorre a lista de processos e vê qual tem maior prioridade (menor periodo)
