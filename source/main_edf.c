@@ -15,6 +15,13 @@ int main(int argc, char *argv[]){
         printf("ERRO! Certifique-se de passar um arquivo existente\n");
         return 0;
     }
+
+    char *tipo_de_arquivo = strstr(argv[1], ".txt");
+
+    if (tipo_de_arquivo == NULL){
+        printf("ARQUIVO INVÁLIDO! Certifique-se que o arquivo passado seja do tipo .txt\n");
+        return 0;
+    }
     edf(arquivo);
 
     fclose(arquivo);
