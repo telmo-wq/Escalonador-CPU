@@ -5,8 +5,8 @@
 
 
 int main(int argc, char *argv[]){
-    FILE *arquivo = fopen(argv[2], "r");
-    if (strcmp(argv[1], "edf") == 0){
-        edf(arquivo);
-    }
+    FILE *arquivo = fopen(argv[1], "r");
+    edf(arquivo);
+
+    fclose(arquivo);
 }

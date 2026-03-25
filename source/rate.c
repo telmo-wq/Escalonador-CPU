@@ -18,9 +18,9 @@ void rate(FILE *arquivo){
         adicionar_processo(&head, nome, periodo, burst);
     }
 
-    int menor_periodo;
+    int menor_deadline;
 
-    menor_periodo = head->periodo;   
+    menor_deadline = head->periodo;   
 
     Processo *processo_atual = NULL;
     Processo *processo_anterior = NULL;
@@ -32,7 +32,7 @@ void rate(FILE *arquivo){
     fprintf(log, "\n");
 
     for (int t = 0; t < total_time; t++){   //loop principal
-        menor_periodo = 100000;
+        menor_deadline = 100000;
         processo_atual = NULL;
 
 
@@ -73,8 +73,8 @@ void rate(FILE *arquivo){
         Processo *aux3 = head;  
         while(aux3 != NULL){                //percorre a lista de processos e vê qual tem maior prioridade (menor periodo)
             if (aux3->tempo_restante > 0){
-                if (aux3->periodo < menor_periodo){
-                    menor_periodo = aux3->periodo;
+                if (aux3->deadline < menor_deadline){
+                    menor_deadline = aux3->deadline;
                     processo_atual = aux3;
                 }
             }
