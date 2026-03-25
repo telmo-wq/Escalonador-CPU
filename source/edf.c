@@ -27,7 +27,7 @@ void edf(FILE *arquivo){
 
     int unidades_idle = 0;
 
-    FILE *log = fopen("rate_tmfc.out", "w");
+    FILE *log = fopen("edf_tmfc.out", "w");
     fprintf(log, "EXECUTION BY EARLIEST-DEADLINE\n");
     fprintf(log, "\n");
 
@@ -54,8 +54,6 @@ void edf(FILE *arquivo){
                 aux->tempo_restante = aux->burst;
                 aux->deadline = t + aux->periodo;
                 aux->proxima_ativacao = t + aux->periodo;
-
-                printf("%s  %d  %d  %d\n", aux->nome, t, aux->deadline, aux->proxima_ativacao);
                 
             }
             aux = aux->next;   
@@ -63,7 +61,7 @@ void edf(FILE *arquivo){
 
 
         if(processo_anterior != NULL && processo_anterior->status == 'L'){
-            fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+            fprintf(log, "[%s] for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
             processo_anterior->unidades_segmento = 0;
             processo_anterior->status = 'R';
             processo_anterior = NULL;
@@ -86,11 +84,11 @@ void edf(FILE *arquivo){
             if (processo_anterior != NULL){
                 if (processo_anterior->tempo_restante > 0){
                     processo_anterior->status = 'H';
-                    fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+                    fprintf(log, "[%s] for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
                 }else {
                     processo_anterior->status = 'F';
                     processo_anterior->COMPLETE_EXECUTION++;
-                    fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+                    fprintf(log, "[%s] for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
                 }
                 processo_anterior->unidades_segmento = 0;
                 processo_anterior = NULL;
@@ -114,7 +112,7 @@ void edf(FILE *arquivo){
                 processo_anterior->LOST_DEADLINES++;
 
             }
-            fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+            fprintf(log, "[%s] for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
 
             processo_anterior->unidades_segmento = 0;
         }
@@ -136,7 +134,7 @@ void edf(FILE *arquivo){
             pointer->status = 'K';
             pointer->KILLED++;
 
-            fprintf(log, "%s for %d units - %c\n", pointer->nome, pointer->unidades_segmento, pointer->status);
+            fprintf(log, "[%s] for %d units - %c\n", pointer->nome, pointer->unidades_segmento, pointer->status);
         }
         pointer = pointer->next;
     }

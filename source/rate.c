@@ -18,9 +18,9 @@ void rate(FILE *arquivo){
         adicionar_processo(&head, nome, periodo, burst);
     }
 
-    int menor_deadline;
+    int menor_periodo;
 
-    menor_deadline = head->periodo;   
+    menor_periodo = head->periodo;   
 
     Processo *processo_atual = NULL;
     Processo *processo_anterior = NULL;
@@ -32,7 +32,7 @@ void rate(FILE *arquivo){
     fprintf(log, "\n");
 
     for (int t = 0; t < total_time; t++){   //loop principal
-        menor_deadline = 100000;
+        menor_periodo = 100000;
         processo_atual = NULL;
 
 
@@ -54,8 +54,6 @@ void rate(FILE *arquivo){
                 aux->tempo_restante = aux->burst;
                 aux->deadline = t + aux->periodo;
                 aux->proxima_ativacao = t + aux->periodo;
-
-                printf("%s  %d  %d  %d\n", aux->nome, t, aux->deadline, aux->proxima_ativacao);
                 
             }
             aux = aux->next;   
@@ -63,7 +61,7 @@ void rate(FILE *arquivo){
 
 
         if(processo_anterior != NULL && processo_anterior->status == 'L'){
-            fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+            fprintf(log, "[%s] for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
             processo_anterior->unidades_segmento = 0;
             processo_anterior->status = 'R';
             processo_anterior = NULL;
@@ -73,8 +71,8 @@ void rate(FILE *arquivo){
         Processo *aux3 = head;  
         while(aux3 != NULL){                //percorre a lista de processos e vê qual tem maior prioridade (menor periodo)
             if (aux3->tempo_restante > 0){
-                if (aux3->deadline < menor_deadline){
-                    menor_deadline = aux3->deadline;
+                if (aux3->periodo < menor_periodo){
+                    menor_periodo = aux3->periodo;
                     processo_atual = aux3;
                 }
             }
@@ -86,11 +84,11 @@ void rate(FILE *arquivo){
             if (processo_anterior != NULL){
                 if (processo_anterior->tempo_restante > 0){
                     processo_anterior->status = 'H';
-                    fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+                    fprintf(log, "[%s] for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
                 }else {
                     processo_anterior->status = 'F';
                     processo_anterior->COMPLETE_EXECUTION++;
-                    fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+                    fprintf(log, "[%s] for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
                 }
                 processo_anterior->unidades_segmento = 0;
                 processo_anterior = NULL;
@@ -114,7 +112,7 @@ void rate(FILE *arquivo){
                 processo_anterior->LOST_DEADLINES++;
 
             }
-            fprintf(log, "%s for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
+            fprintf(log, "[%s] for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
 
             processo_anterior->unidades_segmento = 0;
         }
@@ -136,7 +134,7 @@ void rate(FILE *arquivo){
             pointer->status = 'K';
             pointer->KILLED++;
 
-            fprintf(log, "%s for %d units - %c\n", pointer->nome, pointer->unidades_segmento, pointer->status);
+            fprintf(log, "[%s] for %d units - %c\n", pointer->nome, pointer->unidades_segmento, pointer->status);
         }
         pointer = pointer->next;
     }

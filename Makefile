@@ -20,4 +20,4 @@ processos.o: source/processos.c source/biblioteca.h
 	gcc -c source/processos.c
 
 clean:
-	rm -rf *.o rate edf rate_tmfc.out
+	rm -rf *.o rate edf rate_tmfc.out edf_tmfc.out
