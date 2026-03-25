@@ -30,12 +30,3 @@ void adicionar_processo(Processo **head, char *nome, int periodo, int burst){
     }
 }
 
-
-void imprimir_processos(Processo *head){
-    Processo *aux = head;
-
-    while(aux != NULL){
-        printf("%s %d %d\n", aux->nome, aux->periodo, aux->burst);
-        aux = aux->next;
-    }
-}
