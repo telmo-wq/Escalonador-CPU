@@ -20,8 +20,6 @@ void rate(FILE *arquivo){
 
     int menor_periodo;
 
-    menor_periodo = head->periodo;   
-
     Processo *processo_atual = NULL;
     Processo *processo_anterior = NULL;
 

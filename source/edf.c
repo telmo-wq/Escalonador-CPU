@@ -18,9 +18,7 @@ void edf(FILE *arquivo){
         adicionar_processo(&head, nome, periodo, burst);
     }
 
-    int menor_deadline;
-
-    menor_deadline = head->deadline;   
+    int menor_deadline; 
 
     Processo *processo_atual = NULL;
     Processo *processo_anterior = NULL;
@@ -60,7 +58,7 @@ void edf(FILE *arquivo){
         }
 
 
-        if(processo_anterior != NULL && processo_anterior->status == 'L'){
+        if(processo_anterior != NULL && processo_anterior->status == 'L'){     //registra o processo vencido anterior como perdido no log(passou a deadline)
             fprintf(log, "[%s] for %d units - %c\n", processo_anterior->nome, processo_anterior->unidades_segmento, processo_anterior->status);
             processo_anterior->unidades_segmento = 0;
             processo_anterior->status = 'R';
